@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+*.jsonl
+modernbert_finetuned/
+modernbert_output/
+modernbert_5000/
