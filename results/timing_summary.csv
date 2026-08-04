@@ -1,0 +1,6 @@
+step,seconds,minutes
+Silver labels generation (Llama 8 3b),5672.2,94.5
+ModernBERT fine-tuning,622.2,10.4
+Baselines training total,123.6,2.1
+Direct Llama 3 baseline,572.1,9.5
+Validation Llama labeling,293.3,4.9

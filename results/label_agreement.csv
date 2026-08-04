@@ -1,0 +1,6 @@
+category,reviews,sentiments_compared,matches,agreement_rate
+Electronics,25,68,68,1.0
+Beauty_and_Personal_Care,20,93,93,1.0
+Video_Games,22,92,92,1.0
+Amazon_Fashion,10,34,34,1.0
+Books,23,107,107,1.0
