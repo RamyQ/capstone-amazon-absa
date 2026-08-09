@@ -1,0 +1,31 @@
+category,type,aspect,score
+Electronics,most positive,value,0.92
+Electronics,most positive,shipping speed,0.8
+Electronics,most positive,value for money,0.77
+Electronics,most negative,instructions,-0.6
+Electronics,most negative,battery life,0.07
+Electronics,most negative,weight,0.16
+Beauty_and_Personal_Care,most positive,shine,0.92
+Beauty_and_Personal_Care,most positive,absorption speed,0.89
+Beauty_and_Personal_Care,most positive,colors,0.79
+Beauty_and_Personal_Care,most negative,stickiness,-0.55
+Beauty_and_Personal_Care,most negative,instructions,-0.19
+Beauty_and_Personal_Care,most negative,greasiness,-0.03
+Video_Games,most positive,shipping speed,1.0
+Video_Games,most positive,game,0.89
+Video_Games,most positive,ease of use,0.85
+Video_Games,most negative,difficulty level,-0.07
+Video_Games,most negative,durability,0.04
+Video_Games,most negative,compatibility,0.08
+Amazon_Fashion,most positive,cute design,1.0
+Amazon_Fashion,most positive,cute,1.0
+Amazon_Fashion,most positive,comfiness,0.95
+Amazon_Fashion,most negative,sizing,-0.45
+Amazon_Fashion,most negative,size,-0.26
+Amazon_Fashion,most negative,durability,-0.11
+Books,most positive,humor,0.91
+Books,most positive,book,0.85
+Books,most positive,research,0.85
+Books,most negative,pacing,-0.23
+Books,most negative,ending,-0.14
+Books,most negative,storyline,0.12
