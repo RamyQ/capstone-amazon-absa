@@ -4,7 +4,7 @@ DATA-6900 Capstone
 
 ## What this project does
 
-Amazon reviews often mention more than one product feature with different opinions in the same sentence, like "battery is great but the screen is dim." A normal sentiment model just gives the whole review one label and misses that detail.
+Amazon reviews often mention more than one product feature with different opinions in the same sentence, like “The battery life is great but the sound quality is terrible and the screen is just okay.” A normal sentiment model just gives the whole review one label and misses that detail.
 
 This project uses Llama 3 8B to label individual aspects and their sentiment across 10,000 reviews. Those labels are then used to fine tune ModernBERT, a smaller model, so it can do the same task on its own without needing the LLM every time.
 
