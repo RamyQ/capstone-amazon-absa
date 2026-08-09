@@ -4,7 +4,7 @@ DATA-6900 Capstone
 
 ## What this project does
 
-Amazon reviews often mention more than one product feature with different opinions in the same sentence, like “The battery life is great but the sound quality is terrible and the screen is just okay.” A normal sentiment model just gives the whole review one label and misses that detail.
+Amazon reviews often mention more than one product feature with different opinions in the same sentence, like "The battery life is great but the sound quality is terrible and the screen is just okay." A normal sentiment model just gives the whole review one label and misses that detail.
 
 This project uses Llama 3 8B to label individual aspects and their sentiment across 10,000 reviews. Those labels are then used to fine tune ModernBERT, a smaller model, so it can do the same task on its own without needing the LLM every time.
 
@@ -20,8 +20,18 @@ Full numbers and charts are in the report and in the results folder.
 - `report/` the final report as a PDF and the LaTeX source
 - `presentation/` the final presentation slides
 - `figures/` the charts used in the report
-- `results/` the CSV files with the actual numbers (accuracy, F1, label agreement, timing)
-- `data/` the silver labeled data and the manually checked validation set
+- `results/` the CSV files with the actual numbers (accuracy, F1, label agreement, timing, aspect rankings)
+- `data/` the silver labeled data, the manually checked validation set, and a raw data sample
+
+## About the raw data sample
+
+The notebook loads the first 50,000 reviews per category. That is what the results in this repo are based on.
+
+`data/raw_sample/` only has the first 15,000 reviews per category, not the full 50,000. It is just there so someone can see what the raw data looks like without downloading the whole dataset. GitHub does not allow uploading a file bigger than 25MB through the browser, so 15,000 rows is what fits.
+
+Metadata files are not included at all, even 15,000 rows of metadata is too large to upload. The full reviews and metadata are both available at the source link below.
+
+The metadata files are not included. Even trimmed to 50,000 rows they were still too large to upload. The full metadata and review files are available at the source link below.
 
 ## How to run it
 
@@ -34,7 +44,7 @@ ollama pull llama3.1:8b
 
 Set the `base_path` variable at the top of the notebook to wherever you put the Amazon Reviews 2023 files, then run the notebook top to bottom.
 
-The raw dataset is too large to include here. It can be downloaded from https://amazon-reviews-2023.github.io/
+The full raw dataset is too large to include here. It can be downloaded from https://amazon-reviews-2023.github.io/
 
 Labeling all 10,000 reviews takes about 95 minutes. Fine tuning ModernBERT takes about 10 minutes.
 
