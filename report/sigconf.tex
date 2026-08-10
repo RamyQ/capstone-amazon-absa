@@ -1,0 +1,410 @@
+%%
+%% This is file `sigconf.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% samples.dtx  (with options: `all,proceedings,sigconf')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from sigconf.tex.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file samples.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%%
+%%
+%% Commands for TeXCount
+%TC:macro \cite [option:text,text]
+%TC:macro \citep [option:text,text]
+%TC:macro \citet [option:text,text]
+%TC:envir table 0 1
+%TC:envir table* 0 1
+%TC:envir tabular [ignore] word
+%TC:envir displaymath 0 word
+%TC:envir math 0 word
+%TC:envir comment 0 0
+%%
+%% The first command in your LaTeX source must be the \documentclass
+%% command.
+%%
+%% For submission and review of your manuscript please change the
+%% command to \documentclass[manuscript, screen, review]{acmart}.
+%%
+%% When submitting camera ready or to TAPS, please change the command
+%% to \documentclass[sigconf]{acmart} or whichever template is required
+%% for your publication.
+%%
+%%
+\documentclass[sigconf]{acmart}
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    Bib\TeX}}}
+
+%% Rights management information.  This information is sent to you
+%% when you complete the rights form.  These commands have SAMPLE
+%% values in them; it is your responsibility as an author to replace
+%% the commands and values with those provided to you when you
+%% complete the rights form.
+\setcopyright{none}
+\settopmatter{printacmref=false}
+\acmConference[DATA-6900]{DATA-6900 Capstone Final Report}{2026}{Wentworth Institute of Technology}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+%% These commands are for a PROCEEDINGS abstract or paper.
+%%
+%%  Uncomment \acmBooktitle if the title of the proceedings is different
+%%  from ``Proceedings of ...''!
+%%
+%%\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
+%%  June 03--05, 2018, Woodstock, NY}
+
+
+%%
+%% Submission ID.
+%% Use this when submitting an article to a sponsored event. You'll
+%% receive a unique submission ID from the organizers
+%% of the event, and this ID should be used as the parameter to this command.
+%%\acmSubmissionID{123-A56-BU3}
+
+%%
+%% For managing citations, it is recommended to use bibliography
+%% files in BibTeX format.
+%%
+%% You can then either use BibTeX with the ACM-Reference-Format style,
+%% or BibLaTeX with the acmnumeric or acmauthoryear sytles, that include
+%% support for advanced citation of software artefact from the
+%% biblatex-software package, also separately available on CTAN.
+%%
+%% Look at the sample-*-biblatex.tex files for templates showcasing
+%% the biblatex styles.
+%%
+%%
+%% The majority of ACM publications use numbered citations and
+%% references.  The command \citestyle{authoryear} switches to the
+%% "author year" style.
+%%
+%% If you are preparing content for an event
+%% sponsored by ACM SIGGRAPH, you must use the "author year" style of
+%% citations and references.
+%% Uncommenting
+%% the next command will enable that style.
+%%\citestyle{acmauthoryear}
+
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+%%
+%% The "title" command has an optional parameter,
+%% allowing the author to define a "short title" to be used in page headers.
+\title[ABSA on Amazon Reviews]{Aspect-Based Sentiment Analysis on Amazon Reviews using LLM-Generated Labels and Fine-Tuned Transformers}
+
+\author{Ramy Qranfal}
+\affiliation{%
+  \institution{School of Data Science, Wentworth Institute of Technology}
+  \city{Boston}
+  \state{Massachusetts}
+  \country{USA}}
+\email{qranfalr@wit.edu}
+
+\renewcommand{\shortauthors}{Qranfal}
+
+%%
+%% By default, the full list of authors will be used in the page
+%% headers. Often, this list is too long, and will overlap
+%% other information printed in the page headers. This command allows
+%% the author to define a more concise list
+%% of authors' names for this purpose.
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\begin{abstract}
+This project develops an aspect-based sentiment analysis (ABSA) system for 
+Amazon product reviews. Llama 3 8B was used to generate silver labels for 
+aspect-sentiment pairs across five product categories (Electronics, Beauty 
+and Personal Care, Video Games, Amazon Fashion, and Books), producing 37,242 
+labeled examples. These labels were used to fine-tune ModernBERT, a smaller 
+transformer model that can classify sentiment without requiring direct LLM 
+prompting. The fine-tuned model achieved 76.7\% accuracy and 0.69 macro F1 
+on a held-out test set, outperforming traditional machine learning baselines (Logistic Regression, SVM, Random Forest, and a stacking ensemble) on every metric, with the largest gap on macro F1. Manual review of a held-out validation set showed 94-100\% 
+agreement between Llama-generated labels and human-corrected labels, 
+supporting the reliability of the silver labeling approach. This work shows 
+that LLM-generated labels can effectively train smaller, faster models for 
+aspect-based sentiment classification.
+\end{abstract}
+
+\keywords{ABSA, transformers, LLM, fine-tuning, silver labels, e-commerce, Amazon Reviews, NLP}
+
+
+\maketitle
+
+\section{Introduction}
+Small sellers on Amazon face a difficult problem: they can see that a product is rated 3.8 stars, but not why. A review might praise the battery and criticize the sound quality in the same sentence, and a tool that assigns one label to the whole review will average those opinions into something that tells the seller nothing actionable.
+
+Aspect-Based Sentiment Analysis (ABSA) solves this by pulling out each feature a reviewer mentions and scoring the sentiment toward that feature on its own. The catch is training data. An ABSA model needs examples where individual aspects are already marked with their sentiment, and producing those by hand is slow and expensive. Projects that avoid manual labeling often fall back on rule-based tools like SpaCy and TextBlob, which were not built for the misspellings, sarcasm, and fragmentary phrasing that fill real customer reviews.
+
+This project takes a different route. Llama 3 8B generates the aspect-sentiment labels automatically, and those labels, called silver labels, are used to fine-tune ModernBERT. The result is a small classifier that handles ABSA on its own, with no LLM call needed at prediction time. The question the project sets out to answer is whether that smaller model can get close to the accuracy of prompting the LLM directly while running fast enough to process reviews at scale. Performance is measured against four traditional machine learning baselines across five Amazon categories: Electronics, Beauty and Personal Care, Video Games, Amazon Fashion, and Books.
+
+
+\section{Related Work}
+Sentiment analysis on Amazon reviews has shifted through several generations of methods, and each shift was a response to a specific weakness in what came before.
+
+The earliest approaches leaned on rule-based libraries such as SpaCy and TextBlob. These depend on fixed grammatical patterns, which breaks down quickly on review text that ignores standard grammar. Machine learning methods replaced them because they learn from the data rather than from hand-written rules.
+
+Scott et al. \cite{scott2025} sit at the boundary between these two eras. Their hybrid combined Random Forest and SVM but still relied on SpaCy for the extraction step, and while it reported 99\% accuracy, training took 16 hours and the study covered only two categories. Ali et al. \cite{ali2024} later benchmarked traditional models against transformers on 400,000 reviews spanning five categories, where BERT led at 89\%. That comparison, though, was at the level of the full review rather than individual aspects.
+
+Shaik Vadla et al. \cite{vadla2024} brought transformers to the aspect level, fine-tuning BERT and T5 on synthetic labels for 91-92\% accuracy. Their constraint was a fixed list of twelve predefined aspects, so anything a customer mentioned outside that list was invisible to the model. Work after this began combining architectures instead of scaling single ones. Bellar et al. \cite{bellar2024} found a CNN-RNN-Bi-LSTM hybrid reached 96.2\%, beating standalone transformers, and Kumar et al. \cite{kumar2026} carried the hybrid idea into cross-domain territory with SentXFormer, which held 98.7\% accuracy when trained on one review source and tested on another. Both, however, classified overall sentiment rather than per-aspect sentiment.
+
+A parallel line of work tried to eliminate labeled data entirely. Dami and Alimardani \cite{dami2024} applied LDA topic modeling to surface aspects with no predefined list, which handled informal language better than rule-based extraction, though the paper reported no accuracy metrics, leaving it hard to place against supervised methods.
+
+Reading these together, the trajectory is clear enough, but three things remain untouched. None of this work tracks how sentiment toward a given aspect shifts over time. None of it uses an LLM to generate aspect-level labels and then trains a smaller model on them, which would sidestep both manual labeling and predefined aspect lists. And most validation happens on one or two categories, so generalization stays an open question. This project takes on all three.
+
+The four baselines compared against in this project are long-standing methods in text classification. Logistic Regression is the standard linear starting point. SVMs handle the high-dimensional sparse vectors that TF-IDF produces particularly well. Random Forest averages across many decision trees to reduce the variance a single tree would have. Stacking trains a second model on the outputs of the first three, which often edges out any of them alone.
+
+\section{Data}
+
+\subsection{Source and Categories}
+The Amazon Reviews 2023 dataset covers five categories used here: Electronics, Beauty and Personal Care, Video Games, Amazon Fashion, and Books. Each arrives as two JSONL files, one holding review text with rating, timestamp, and product ID, the other holding product metadata including the full category hierarchy.
+
+\subsection{Cleaning}
+Only the first 50,000 reviews per category were loaded, which kept processing time manageable without meaningfully reducing variety. Reviews shorter than 10 words were dropped, since a review that brief rarely names a specific feature. Product metadata was merged in on the shared parent ASIN field, and sub-category was pulled from the nested category list in that metadata, giving values like "Headphones" underneath Electronics.
+
+\subsection{Sampling}
+The manual validation set was pulled first, before anything else touched the data: 100 reviews total, about 20 per category, held aside so they could never appear in labeling or training.
+
+Training data was then drawn from what remained, 2,000 reviews per category for 10,000 total. Rather than sampling at random, reviews were grouped by sub-category and up to 200 taken from each group, with any gap filled randomly afterward. Without this step a category like Electronics would skew heavily toward whichever sub-category is most reviewed, and the model would learn that sub-category's vocabulary rather than the category's.
+
+\subsection{Label Generation}
+The raw data carries no aspect-sentiment labels, so Llama 3 8B produced them. It ran locally through Ollama instead of the Groq API named in the original proposal, since free-tier rate limits made 10,000 reviews unworkable on that route.
+
+Each review went to the model with a prompt asking it to name every product feature mentioned and assign positive, neutral, or negative to each. The prompt spelled out what each sentiment class meant and included one worked example, which kept the output format consistent. Responses came back as JSON, structured as \texttt{\{"aspects": [\{"aspect": "battery", "sentiment": "positive"\}]\}}. Temperature stayed at 0 so results would be reproducible. Eight requests ran in parallel through a thread pool, cutting total labeling time to roughly 95 minutes on an RTX 4080 Super, against an estimated 8 hours running one at a time.
+
+That yielded 37,242 aspect-sentiment pairs. Fewer than 100 responses came back with a sentiment outside the three valid classes, usually "mixed," and were dropped.
+
+The 100 validation reviews went through this identical process, after which each label was checked by hand and corrected where wrong. That corrected version serves as ground truth for the agreement measurement in Section~\ref{sec:results}.
+
+\subsection{Training Format and Split}
+Every aspect-sentiment pair became a single training row, written as the review text, a separator token, then the aspect: \texttt{review [SEP] aspect}. The sentiment is the target. Splitting 80/10/10 with stratification on sentiment class gave 29,793 training rows, 3,724 validation, and 3,725 test.
+
+\section{Methodology}
+
+\subsection{ModernBERT}
+ModernBERT is a 2024 encoder-only transformer, a direct update to BERT that keeps the same self-attention architecture while extending the context window to 8192 tokens and improving inference speed. Llama 3 8B, used for label generation, is a decoder-only model built for text generation, which is what lets it emit structured JSON output rather than classify directly.
+
+ModernBERT was the choice here over standard BERT for two reasons: it accepts longer inputs, which matters for reviews that run several paragraphs, and it runs faster at inference while keeping the same underlying encoder architecture. The base variant (149M parameters) was loaded from Hugging Face and given a three-class classification head for positive, neutral, and negative. The checkpoint used was \texttt{answerdotai/ModernBERT-base}, loaded through \texttt{AutoModelForSequenceClassification} with \texttt{num\_labels=3}, and tokenized with the matching \texttt{AutoTokenizer} at \texttt{max\_length=256}.
+
+Fine-tuning ran through the Hugging Face \texttt{Trainer} API for 3 epochs at batch size 16, learning rate 2e-5, with fp16 mixed precision. Total time was about 622 seconds on an RTX 4080 Super. These are conventional defaults for fine-tuning BERT-family models and were not arrived at through a search; no learning rate sweep or grid search was run, which Section~\ref{sec:discussion} returns to as a limitation.
+
+A second model was trained under identical settings on a random 5,000-example subset. Comparing it against the full-data model shows how sensitive performance is to the amount of labeled data available.
+
+\subsection{Traditional Baselines}
+Four traditional machine learning methods were tested to see how much better ModernBERT performs compared to simpler models that take only seconds to train instead of minutes. All were built in scikit-learn on TF-IDF features (\texttt{TfidfVectorizer}, 5,000 max features, unigrams and bigrams) and trained separately for each category.
+
+\begin{itemize}
+  \item \textbf{Logistic Regression} predicts a probability for each sentiment class using a weighted combination of the input features. It is the simplest model here and serves as a baseline for how much the other methods improve on it.
+  \item \textbf{SVM} finds the boundary that best separates the sentiment classes. Support Vector Machines have historically performed well on sparse, high-dimensional text data. The version used, \texttt{LinearSVC}, only outputs a class label rather than a probability, so it was wrapped in \texttt{CalibratedClassifierCV} to produce the probability scores that ROC-AUC requires.
+  \item \textbf{Random Forest} builds 100 separate decision trees and averages their predictions. Averaging across many trees reduces the instability that a single decision tree would have.
+  \item \textbf{Stacking} combines the three models above. Each one makes its own prediction, and those three predictions are then fed into a fourth model, a Logistic Regression meta-learner, which learns how to weigh them. The idea is that combining several models can outperform any single one, since each model tends to make different kinds of mistakes.
+\end{itemize}
+
+\subsection{Direct LLM Prompting}
+The fifth method compared is Llama 3 8B prompted directly, with no fine-tuning. This shows what the language model can do on its own, without ever being trained for this specific task. It represents the upper limit of performance that ModernBERT is trying to approach, at a much lower computational cost. It was evaluated on 500 randomly selected test examples using the same prompt and temperature setting described in the data section.
+
+\subsection{Temporal Trend Analysis}
+Each review carries a timestamp, which was converted to a calendar year. For every category, the proportion of aspects labeled positive was computed per year, restricted to 2010 onward since earlier years hold too few reviews for the ratio to mean anything. This shows whether sentiment toward a category has drifted over time.
+
+\subsection{Aspect Rankings}
+\label{sec:aspect-scoring}
+Each aspect was given a score to show whether customers generally liked or disliked it. The score is the percentage of positive mentions minus the percentage of negative mentions for that aspect. A score of +1 means every mention of that aspect was positive, and a score of -1 means every mention was negative. Aspects mentioned fewer than 20 times in a category were excluded, since an aspect mentioned only once or twice could score a perfect +1 or -1 without providing much real signal.
+
+\section{Results}
+\label{sec:results}
+
+The main finding is that fine-tuning a smaller model on LLM-generated labels works. ModernBERT reached 76.7\% accuracy and 0.693 F1 Macro on the test set, well above every traditional machine learning baseline, and close enough to direct LLM prompting to be a practical substitute at a fraction of the cost. Table~\ref{tab:results} summarizes all methods, and the sections below explain what each number means.
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{Model comparison on the held-out test set}
+\label{tab:results}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Model} & \textbf{Acc.} & \textbf{F1} & \textbf{Prec.} & \textbf{Rec.} & \textbf{AUC} \\
+\midrule
+ModernBERT & 0.767 & 0.693 & 0.710 & 0.680 & 0.882 \\
+Logistic Reg. & 0.643 & 0.456 & 0.526 & 0.468 & 0.705 \\
+SVM & 0.635 & 0.407 & 0.460 & 0.436 & 0.690 \\
+Random Forest & 0.550 & 0.443 & 0.446 & 0.442 & 0.640 \\
+Stacking & 0.647 & 0.435 & 0.466 & 0.465 & 0.717 \\
+Direct Llama 3 8B & 0.978 & 0.973 & --- & --- & n/a \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{ModernBERT beats the traditional baselines}
+
+ModernBERT outperforms every traditional model, and the gap is much larger on F1 Macro than on accuracy. On accuracy the difference is about 12 points, but on F1 Macro it is closer to 25. This gap exists because the traditional models achieve much of their accuracy simply by predicting the majority class, positive, most of the time. F1 Macro treats all three sentiment classes equally, so it exposes how poorly those models actually handle neutral and negative reviews. Figure~\ref{fig:accuracy} shows this holds consistently across all five categories, not just on average.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.45\textwidth]{accuracy_by_category.png}
+\caption{Model accuracy by category}
+\label{fig:accuracy}
+\end{figure}
+
+\subsection{The Llama comparison is a ceiling, not a fair benchmark}
+
+Direct Llama 3 8B prompting scores highest in the table at 97.8\%, but this number needs a specific caveat. The test labels used to compute every metric in this paper were generated by Llama 3 8B in the first place. Prompting Llama again on those same reviews largely returns its own earlier output, so this figure reflects self-consistency rather than independent accuracy. It should be read as an upper bound on this evaluation, not a model that ModernBERT is meaningfully losing to.
+
+What is a fair comparison is speed. Table~\ref{tab:speed} shows ModernBERT processes 249 reviews per second, compared to 0.82 for direct Llama prompting, a difference of roughly 300 times. This is the practical argument for fine-tuning: ModernBERT pays a one-time training cost and then runs fast indefinitely, while direct prompting pays a cost on every single review.
+
+\begin{table}[h]
+\centering
+\caption{Inference throughput}
+\label{tab:speed}
+\begin{tabular}{lc}
+\toprule
+\textbf{Method} & \textbf{Reviews/sec} \\
+\midrule
+ModernBERT & 249.4 \\
+Direct Llama 3 8B & 0.82 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The training labels are reliable}
+
+Since every metric above depends on the quality of the LLM-generated labels, that quality was checked directly. A set of 100 reviews was labeled by Llama and then manually reviewed. Agreement between Llama's labels and the manually corrected labels was at least 94\% in every category, shown in Table~\ref{tab:agreement}, which supports treating the silver labels as reliable training data.
+
+\begin{table}[h]
+\centering
+\caption{Label agreement by category}
+\label{tab:agreement}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Category} & \textbf{Reviews} & \textbf{Labels} & \textbf{Agreement} \\
+\midrule
+Electronics & 25 & 70 & 94.3\% \\
+Beauty and Personal Care & 19 & 92 & 100\% \\
+Video Games & 19 & 89 & 100\% \\
+Amazon Fashion & 10 & 34 & 100\% \\
+Books & 16 & 100 & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Training data size matters}
+
+Cutting the training set from 29,793 examples down to 5,000, about 17\% of the original, dropped accuracy from 76.7\% to 68.9\% and F1 Macro from 0.693 to 0.560. This shows the full dataset was doing real work rather than padding the results, and suggests more labeled data would likely improve performance further.
+
+\subsection{Where the model struggles}
+
+Figure~\ref{fig:cm} shows most of ModernBERT's mistakes involve confusing the neutral class with positive. This makes sense for two reasons: neutral is the smallest class in the training data, only 7,000 of 37,242 pairs, and it is also the hardest to define, since the line between a lukewarm statement and mild praise is genuinely ambiguous.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.45\textwidth]{confusion_matrix_modernbert.png}
+\caption{ModernBERT confusion matrix on the test set}
+\label{fig:cm}
+\end{figure}
+
+\subsection{Sentiment is stable over time}
+
+Figure~\ref{fig:trend} tracks the positive sentiment ratio for each category from 2010 to 2023. After an unstable start in 2010--2012, where Fashion and Beauty both open near 0.75--0.83 on relatively few reviews, all five categories converge into a narrow band between roughly 0.50 and 0.67 and stay there through 2023. No category shows a sustained upward or downward trend, which suggests aspect-level sentiment on Amazon is fairly stable once review volume is large enough for the ratio to settle.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.45\textwidth]{sentiment_trend.png}
+\caption{Positive sentiment ratio by category, 2010--2023}
+\label{fig:trend}
+\end{figure}
+
+\subsection{Practical output: what a seller would actually see}
+
+The aspect-level scores described in Section~\ref{sec:aspect-scoring} produce the kind of output a seller could act on directly. Table~\ref{tab:aspects} shows the highest and lowest scoring aspects for a sample of categories. In Electronics, for example, customers responded very positively to value (+0.92) but frequently complained about instructions (-0.60). This kind of breakdown is the practical payoff of aspect-level analysis over a single overall sentiment score.
+
+\begin{table}[h]
+\centering
+\small
+\caption{Highest and lowest scoring aspects by category}
+\label{tab:aspects}
+\begin{tabular}{llc}
+\toprule
+\textbf{Category} & \textbf{Aspect} & \textbf{Score} \\
+\midrule
+Electronics & value & +0.92 \\
+Electronics & instructions & $-$0.60 \\
+Amazon Fashion & cute design & +1.00 \\
+Amazon Fashion & sizing & $-$0.45 \\
+Books & humor & +0.91 \\
+Books & pacing & $-$0.23 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Discussion}
+\label{sec:discussion}
+
+The central finding holds up: silver labels from an LLM are good enough to train a much smaller model to a useful level of performance. ModernBERT's 76.7\% accuracy beats every traditional baseline, though the more telling gap is on macro F1, where it reaches 0.693 against a baseline range of 0.407 to 0.456. The baselines close much of the accuracy gap by leaning on the majority positive class, but that strategy collapses on the minority classes, which is exactly what macro F1 exposes. The transformer is reading context in a way TF-IDF features cannot.
+
+The direct prompting result needs care. Its 97.8\% comes from evaluating Llama against labels Llama itself produced, so it reflects self-consistency rather than independent accuracy and sets a ceiling rather than a competitive benchmark. The practical case for the fine-tuned model is unaffected either way: at roughly 249 reviews per second against 0.82, ModernBERT is the only one of the two that can process a full category in reasonable time.
+
+Several limitations qualify these results. The validation set is only 100 reviews, which is enough to sanity-check label quality but thin for a firm estimate. No hyperparameter search was run on ModernBERT, so the 76.7\% figure represents defaults rather than a tuned ceiling, and it is likely some accuracy was left on the table. Sub-category extraction from the metadata also worked imperfectly, with a share of reviews falling into an "Unknown" bucket, which weakened the stratified sampling more than intended. Finally, five categories is broader than most prior work but still far from the full range of Amazon products.
+
+Most importantly, every metric here is measured against LLM-generated labels rather than a gold-labeled test set, so the numbers describe how well models reproduce Llama's labeling rather than how well they match human judgment.
+
+\section{Conclusion}
+An LLM can generate the training labels that aspect-based sentiment analysis normally requires a person to write by hand, and a much smaller model trained on those labels performs well enough to be useful. ModernBERT fine-tuned on 37,242 silver-labeled examples reached 76.7\% accuracy and 0.69 macro F1, outperforming Logistic Regression, SVM, Random Forest, and a stacking ensemble on every metric, with the widest margin on macro F1, while processing reviews roughly 300 times faster than the LLM that generated its training data.
+
+The clearest next steps are a larger manual validation set to tighten the agreement estimate, a proper hyperparameter search on the fine-tuning stage, and fixing the metadata parsing so stratified sampling covers sub-categories as evenly as intended.
+
+\section*{Ethics and Privacy Statement}
+This project uses only publicly available, anonymized Amazon review data. No personally identifiable information was collected or processed. The dataset does not involve human subjects research.
+
+
+%%
+%% The next two lines define the bibliography style to be used, and
+%% the bibliography file.
+\begin{thebibliography}{6}
+
+\bibitem{scott2025}
+T. L. Scott, W. W. Goh, and N. A. Khan. 2025. Aspect-Based Sentiment Analysis on Amazon Product Reviews Using a Novel Hybrid Machine Learning Algorithm. \textit{Journal of Universal Computer Science} 31, 11 (2025), 1147--1174.
+
+\bibitem{vadla2024}
+M. K. Shaik Vadla, M. A. Suresh, and V. K. Viswanathan. 2024. Enhancing Product Design through AI-Driven Sentiment Analysis of Amazon Reviews Using BERT. \textit{Algorithms} 17, 2 (2024), 59.
+
+\bibitem{ali2024}
+H. Ali, E. Hashmi, S. Yayilgan Yildirim, and S. Shaikh. 2024. Analyzing Amazon Products Sentiment: A Comparative Study of Machine and Deep Learning, and Transformer-Based Techniques. \textit{Electronics} 13, 7 (2024), 1305.
+
+\bibitem{bellar2024}
+O. Bellar, A. Baina, and M. Ballafkih. 2024. Sentiment Analysis: Predicting Product Reviews for E-Commerce Recommendations Using Deep Learning and Transformers. \textit{Mathematics} 12, 15 (2024), 2403.
+
+\bibitem{dami2024}
+S. Dami and R. Alimardani. 2024. An Aspect-Level Sentiment Analysis Based on LDA Topic Modeling. \textit{Journal of Information Systems and Telecommunication} 12, 46 (2024), 117--126.
+
+\bibitem{kumar2026}
+A. Kumar, K. Abhishek, and A. Shafeeq B M. 2026. SentXFormer: A Transformer-Enhanced Hybrid Deep Learning Framework for Cross-Domain Sentiment Analysis of Customer Reviews. \textit{Scientific Reports} 16 (2026), 3528.
+
+\end{thebibliography}
+
+
+
+
+
+\end{document}
+\endinput
+%%
+%% End of file `sigconf.tex'.
