@@ -29,9 +29,7 @@ The notebook loads the first 50,000 reviews per category. That is what the resul
 
 `data/raw_sample/` only has the first 15,000 reviews per category, not the full 50,000. It is just there so someone can see what the raw data looks like without downloading the whole dataset. GitHub does not allow uploading a file bigger than 25MB through the browser, so 15,000 rows is what fits.
 
-Metadata files are not included at all, even 15,000 rows of metadata is too large to upload. The full reviews and metadata are both available at the source link below.
-
-The metadata files are not included. Even trimmed to 50,000 rows they were still too large to upload. The full metadata and review files are available at the source link below.
+Metadata files are not included at all. Even a small sample of the metadata came out too large to upload. The full reviews and metadata are both available at the source link below.
 
 ## How to run it
 
