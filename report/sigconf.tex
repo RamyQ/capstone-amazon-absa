@@ -195,6 +195,8 @@ That yielded 37,242 aspect-sentiment pairs. Fewer than 100 responses came back w
 
 The 100 validation reviews went through this identical process, after which each label was checked by hand and corrected where wrong. That corrected version serves as ground truth for the agreement measurement in Section~\ref{sec:results}.
 
+Each label was checked against two things: whether the aspect actually appeared in the review, and whether the sentiment matched how the reviewer talked about it. Four sentiment labels were corrected, all within Electronics, along with one review where the model pulled in aspects that did not belong to that product at all. Since Llama's label was visible while reviewing, the agreement rate is likely a bit higher than it would be from labeling blind.
+
 \subsection{Training Format and Split}
 Every aspect-sentiment pair became a single training row, written as the review text, a separator token, then the aspect: \texttt{review [SEP] aspect}. The sentiment is the target. Splitting 80/10/10 with stratification on sentiment class gave 29,793 training rows, 3,724 validation, and 3,725 test.
 
@@ -287,7 +289,7 @@ Direct Llama 3 8B & 0.82 \\
 
 \subsection{The training labels are reliable}
 
-Since every metric above depends on the quality of the LLM-generated labels, that quality was checked directly. A set of 100 reviews was labeled by Llama and then manually reviewed. Agreement between Llama's labels and the manually corrected labels was at least 94\% in every category, shown in Table~\ref{tab:agreement}, which supports treating the silver labels as reliable training data.
+Since every metric above depends on the quality of the LLM-generated labels, that quality was checked directly. A set of 100 reviews was labeled by Llama and then manually reviewed. Agreement between Llama's labels and the manually corrected labels was at least 94\% in every category, shown in Table~\ref{tab:agreement}, which supports treating the silver labels as reliable training data. Eleven of the 100 held-out reviews had no aspect extracted by Llama and were excluded from the count below, leaving 89 reviews with labels to compare.
 
 \begin{table}[h]
 \centering
@@ -308,7 +310,7 @@ Books & 16 & 100 & 100\% \\
 
 \subsection{Training data size matters}
 
-Cutting the training set from 29,793 examples down to 5,000, about 17\% of the original, dropped accuracy from 76.7\% to 68.9\% and F1 Macro from 0.693 to 0.560. This shows the full dataset was doing real work rather than padding the results, and suggests more labeled data would likely improve performance further.
+Cutting the training set from 29,793 examples down to 5,000, about 17\% of the original, dropped accuracy from 76.7\% to 68.9\% and F1 Macro from 0.693 to 0.563. This shows the full dataset was doing real work rather than padding the results, and suggests more labeled data would likely improve performance further.
 
 \subsection{Where the model struggles}
 
